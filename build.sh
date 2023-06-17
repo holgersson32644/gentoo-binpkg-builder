@@ -6,7 +6,7 @@ set -uxa
 
 GPG_SIGNING_KEY="${GPG_SIGNING_KEY:-0x0F1DEAB2D36AD112}"
 
-IMAGE_TAG="gentoo-bootstrap-1:$(date --utc +%Y%m%d_%H%M%S)"
+IMAGE_TAG="git.holgersson.xyz/gentoo-related/gentoo-binpkg-builder:$(date --utc +%Y%m%d_%H%M%S)"
 REPOS="${REPOS:-/var/db/repos}"
 DISTFILES="${DISTFILES:-/var/cache/distfiles-podman-1}"
 BINPKG="${BINPKG:-/var/cache/packages-podman-1}"
