@@ -34,6 +34,7 @@ podman_build_args=(
     --label="gentoo-nfr-${IMAGE_TAG}"
     # Sign the image.
     #--sign-by="${GPG_SIGNING_KEY}"
+    # Rebuild everything w/o cache.
     --no-cache
 )
 
