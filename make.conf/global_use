@@ -1,0 +1,2 @@
+USE="-cet -filecaps -python -nls -sslv3 -tcpd"
+USE="${USE} caps hardened"

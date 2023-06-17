@@ -1,0 +1,27 @@
+ACCEPT_KEYWORDS="~amd64"
+EMERGE_DEFAULT_OPTS="--quiet-build --autounmask=n --binpkg-respect-use=y"
+FEATURES="buildpkg clean-logs compress-build-logs noinfo preserve-libs"
+FEATURES="${FEATURES} -ipc-sandbox -network-sandbox -pid-sandbox"
+MAKEOPTS="-j7 -l8"
+#
+BINPKG_FORMAT="gpkg"
+PORTAGE_COMPRESS="xz"
+PORTAGE_COMPRESS_FLAGS="-9 -T6 --memlimit-decompress=1500M"
+BINPKG_COMPRESS="${PORTAGE_COMPRESS}"
+BINPKG_COMPRESS_FLAGS="${PORTAGE_COMPRESS_FLAGS}"
+#BINPKG_GPG_SIGNING_GPG_HOME="/var/lib/portage/home/.gnupg"
+#BINPKG_GPG_SIGNING_KEY="0x1234567890ABCDEF"
+#FEATURES="${FEATURES} binpkg-signing"
+
+# see bug #662982
+P_BASE="/var/cache"
+DISTDIR="${P_BASE}/distfiles"
+PKGDIR="${P_BASE}/packages"
+
+PORT_LOGDIR="/var/log/portage"
+PORT_LOGDIR_CLEAN="find \"${PORT_LOGDIR}\" -type f ! -name \"summary.log*\" -mtime +84 -delete"
+
+# This sets the language of build output to English.
+# Please keep this setting intact when reporting bugs.
+LC_MESSAGES=C
+# EOF

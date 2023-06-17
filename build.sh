@@ -1,0 +1,48 @@
+#!/bin/bash
+# SPDX-License-Identifier: MIT
+# Author: Nils Freydank <nils.freydank@posteo.de>
+PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+set -uxa
+
+GPG_SIGNING_KEY="${GPG_SIGNING_KEY:-0x0F1DEAB2D36AD112}"
+
+IMAGE_TAG="gentoo-bootstrap-1:$(date --utc +%Y%m%d_%H%M%S)"
+REPOS="${REPOS:-/var/db/repos}"
+DISTFILES="${DISTFILES:-/var/cache/distfiles-podman-1}"
+BINPKG="${BINPKG:-/var/cache/packages-podman-1}"
+LOGDIR="${LOGDIR:-$(pwd)/logs}"
+DOCKER_FILE="${DOCKER_FILE:-$(pwd)/Dockerfile}"
+
+podman_build_args=(
+    # Limit the memory to be used.
+    --memory=20G
+    --memory-swap=1G
+    --shm-size=2G
+    # Share the gentoo repo, overlays etc.
+    -v "${REPOS}:/var/db/repos:ro"
+    # Share the distfiles, i.e. typically source archives.
+    -v "${DISTFILES}:/var/cache/distfiles:rw,U"
+    # Share the binpkgs r/w cache.
+    -v "${BINPKG}:/var/cache/packages:rw,U"
+    # Keep the logs out of the container.
+    -v "${LOGDIR}:/var/log:rw,U"
+    # Use the given OCI file/Dockerfile.
+    -f "${DOCKER_FILE}"
+    # Tag the generated image.
+    -t "${IMAGE_TAG}"
+    # Label the image.
+    --label="gentoo-nfr-${IMAGE_TAG}"
+    # Sign the image.
+    #--sign-by="${GPG_SIGNING_KEY}"
+    --no-cache
+)
+
+mkdir -p "${REPOS}"
+mkdir -p "${DISTFILES}"
+mkdir -p "${BINPKG}"
+mkdir -p "${LOGDIR}"
+
+podman pull gentoo/stage3:amd64-nomultilib-systemd
+podman build "${podman_build_args[@]}"
+
+# vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab

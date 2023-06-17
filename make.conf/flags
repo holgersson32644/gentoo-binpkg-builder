@@ -1,0 +1,13 @@
+COMMON_FLAGS="-O3 -pipe -march=x86-64-v3"
+CFLAGS="${COMMON_FLAGS} -D_FORTIFY_SOURCE=3"
+CXXFLAGS="${COMMON_FLAGS} -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS"
+FCFLAGS="${COMMON_FLAGS}"
+FFLAGS="${COMMON_FLAGS}"
+# -Wl,-O1 -Wl,-as-needed are the default flags
+# '-fdiagnostics-color=always': print colourful diagnostic messages, see man ld
+# '__gentoo_check_ldflags__'  : print QA linker flags
+# '-Wl,-z,relro'              : make segments RO after relocation
+# '-Wl,-z,now'                : disable lazy-binding
+LDFLAGS="-Wl,-O2 -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -fdiagnostics-color=always -Wl,--defsym=__gentoo_check_ldflags__=0"
+
+CPU_FLAGS_X86="aes"
