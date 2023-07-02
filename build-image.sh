@@ -49,4 +49,8 @@ mkdir -p "${LOGDIR}"
 podman pull gentoo/stage3:amd64-nomultilib-systemd
 podman build "${podman_build_args[@]}"
 
+# Update the tag 'latest'.
+podman tag rm "${REGISTRY}:latest"
+podman tag "${REGISTRY}:${VERSION}" "${REGISTRY}:latest"
+
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
