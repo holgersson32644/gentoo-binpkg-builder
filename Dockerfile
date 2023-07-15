@@ -13,6 +13,9 @@ RUN eselect profile set "default/linux/amd64/17.1/no-multilib/systemd/merged-usr
 RUN rm --one-file-system /etc/portage/make.conf
 COPY make.conf /etc/portage/make.conf
 RUN chown root:root -R /etc/portage/make.conf
+# Add overlays in /var/db/repos.
+COPY repos.conf /etc/portage/repos.conf
+RUN chown root:root -R /etc/portage/make.conf
 # Update the compiler
 RUN emerge --oneshot --usepkg sys-devel/gcc:13
 RUN eselect gcc set x86_64-pc-linux-gnu-13 && source /etc/profile
