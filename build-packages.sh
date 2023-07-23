@@ -4,7 +4,7 @@
 PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 set -uxa
 
-mapfile -t EMERGE_CALL_PARAMETERS <<<"${@}"
+mapfile -t EMERGE_CALL_PARAMETERS <<< "${@}"
 
 REGISTRY="git.holgersson.xyz/gentoo-related/gentoo-binpkg-builder"
 VERSION="latest"
