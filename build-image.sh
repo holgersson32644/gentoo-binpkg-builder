@@ -6,8 +6,8 @@ set -uxa
 
 GPG_SIGNING_KEY="${GPG_SIGNING_KEY:-0x0F1DEAB2D36AD112}"
 
-REGISTRY="git.holgersson.xyz/gentoo-related/gentoo-binpkg-builder"
-VERSION="$(date --utc +%Y%m%d_%H%M%S)"
+REGISTRY="${REGISTRY:-git.holgersson.xyz/gentoo-related/gentoo-binpkg-builder}"
+VERSION="${VERSION:-$(date --utc +%Y%m%d_%H%M%S)}"
 IMAGE_TAG="${REGISTRY}:${VERSION}"
 
 REPOS="${REPOS:-/var/db/repos}"
