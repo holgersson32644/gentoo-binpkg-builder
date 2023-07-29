@@ -6,8 +6,8 @@ set -uxa
 
 mapfile -t EMERGE_CALL_PARAMETERS <<< "${@}"
 
-REGISTRY="git.holgersson.xyz/gentoo-related/gentoo-binpkg-builder"
-VERSION="latest"
+REGISTRY="${REGISTRY:-git.holgersson.xyz/gentoo-related/gentoo-binpkg-builder}"
+VERSION="${VERSION:-latest}"
 IMAGE_TAG="${REGISTRY}:${VERSION}"
 
 REPOS="${REPOS:-/var/db/repos}"
