@@ -28,6 +28,8 @@ RUN emerge --usepkg --noreplace dev-lang/rust dev-lang/go \
     @rust-rebuild @golang-rebuild
 # Rebuild packages if necessary.
 RUN emerge @preserved-rebuild
+# Fix stuff after perl upgrades
+RUN perl-cleaner --reallyall
 
 # ===========================================================================
 #   Clean up the image.
