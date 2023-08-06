@@ -17,6 +17,8 @@ LOGDIR="${LOGDIR:-$(pwd)/logs}"
 DOCKER_FILE="${DOCKER_FILE:-$(pwd)/Dockerfile}"
 
 podman_build_args=(
+    # Do not leak the host's /etc/host into the container.
+    --no-hosts
     # Limit the memory to be used.
     --memory=20G
     --memory-swap=1G

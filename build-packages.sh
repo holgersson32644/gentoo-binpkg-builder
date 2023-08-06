@@ -17,6 +17,8 @@ LOGDIR="${LOGDIR:-$(pwd)/logs}"
 PACKAGE_USE="${PACKAGE_USE:-$(pwd)/package.use}"
 
 podman_build_args=(
+    # Do not leak the host's /etc/host into the container.
+    --no-hosts
     # Remove the container after usage.
     --rm
     # Allow interactive questsions by portage
