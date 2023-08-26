@@ -49,4 +49,6 @@ podman run "${podman_build_args[@]}" "${REGISTRY}:${VERSION}" \
     && emerge @golang-rebuild @rust-rebuild \
     && eclean-pkg --deep"
 
+podman unshare chown -R "0:0" "${LOGDIR}"
+
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
