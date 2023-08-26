@@ -4,8 +4,6 @@
 PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 set -uxa
 
-mapfile -t EMERGE_CALL_PARAMETERS <<< "${@}"
-
 REGISTRY="${REGISTRY:-git.holgersson.xyz/gentoo-related/gentoo-binpkg-builder}"
 VERSION="${VERSION:-latest}"
 IMAGE_TAG="${REGISTRY}:${VERSION}"
@@ -31,6 +29,8 @@ podman_build_args=(
     -v "${PACKAGE_USE}:/etc/portage/package.use:ro"
     # Share the gentoo repo, overlays etc.
     -v "${REPOS}:/var/db/repos:ro"
+    # Share the world file, too.
+    -v "./world:/var/lib/portage/world:ro"
     # Share the distfiles, i.e. typically source archives.
     -v "${DISTFILES}:/var/cache/distfiles:rw,U"
     # Share the binpkgs r/w cache.
@@ -45,6 +45,8 @@ mkdir -p "${BINPKG}"
 mkdir -p "${LOGDIR}"
 
 podman run "${podman_build_args[@]}" "${REGISTRY}:${VERSION}" \
-    emerge --oneshot --keep-going ${EMERGE_CALL_PARAMETERS[@]}
+    bash -c "emerge --usepkg --newuse --keep-going --oneshot --deep --update @world \
+    && emerge @golang-rebuild @rust-rebuild \
+    && eclean-pkg --deep"
 
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
