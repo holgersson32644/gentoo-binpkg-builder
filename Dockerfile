@@ -34,6 +34,8 @@ RUN perl-cleaner --reallyall
 # ===========================================================================
 #   Clean up the image.
 # ===========================================================================
+# Unmerge stuff that is not needed.
+RUN emerge --depclean
 RUN rm --verbose --recursive --preserve-root /var/tmp/
 
 # ===========================================================================
