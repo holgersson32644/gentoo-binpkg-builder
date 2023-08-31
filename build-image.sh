@@ -13,7 +13,7 @@ IMAGE_TAG="${REGISTRY}:${VERSION}"
 REPOS="${REPOS:-/var/db/repos}"
 DISTFILES="${DISTFILES:-/var/cache/distfiles-podman-1}"
 BINPKG="${BINPKG:-/var/cache/packages-podman-1}"
-LOGDIR="${LOGDIR:-$(pwd)/logs}"
+LOGDIR="${LOGDIR:-$(pwd)/log}"
 DOCKER_FILE="${DOCKER_FILE:-$(pwd)/Dockerfile}"
 
 podman_build_args=(
