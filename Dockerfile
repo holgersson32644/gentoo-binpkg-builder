@@ -16,9 +16,9 @@ RUN chown root:root -R /etc/portage/make.conf
 # Add overlays in /var/db/repos.
 COPY repos.conf /etc/portage/repos.conf
 RUN chown root:root -R /etc/portage/make.conf
-# Update the compiler
-RUN emerge --oneshot --usepkg sys-devel/gcc:13
-RUN eselect gcc set x86_64-pc-linux-gnu-13 && source /etc/profile
+# Update the compiler and glibc. Switch to the new gcc then and print the version.
+RUN emerge --oneshot --usepkg sys-devel/gcc:13 sys-libs/glibc
+RUN eselect gcc set x86_64-pc-linux-gnu-13 && source /etc/profile && gcc --version
 # Update libtool after the compiler update.
 RUN emerge --oneshot sys-devel/libtool
 # Rebuild the whole world set, probably mostly with binpkgs.
