@@ -44,6 +44,7 @@ PODMAN_BUILD_ARGS=(
 	--platform "${OCI_ARCH}"
     # Tag the generated image.
     -t "${IMAGE_TAG}"
+    -t "latest"
     # Label the image.
     --label="gentoo-nfr-${IMAGE_TAG}"
     # Sign the image.
@@ -72,14 +73,11 @@ _mkdir "${LOGDIR}"
 # === Fetch the base image.
 podman pull gentoo/stage3:amd64-nomultilib-systemd || exit_err "Could not fetch the image."
 
-# === Build the new image.
-podman build "${PODMAN_BUILD_ARGS[@]}" || exit_err "Build failed."
-
 # === Remove the old tag 'latest'.
 podman tag rm "${REGISTRY}:latest" # Do not exit_err here. At least on first run
                                    # there is no latest tag to delete.
 
-# === Tage the new image as 'latest'.
-podman tag "${REGISTRY}:${VERSION}" "${REGISTRY}:latest" || exit_err "Could not tag new image as 'latest'."
+# === Build the new image.
+podman build "${PODMAN_BUILD_ARGS[@]}" || exit_err "Build failed."
 
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
