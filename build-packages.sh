@@ -39,6 +39,12 @@ PODMAN_BUILD_ARGS=(
     -v "${LOGDIR}:/var/log:rw,U"
 )
 
+exit_err()
+{
+  echo "${@}"
+  exit -1
+}
+
 mkdir -p "${REPOS}"
 mkdir -p "${DISTFILES}"
 mkdir -p "${BINPKG}"

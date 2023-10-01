@@ -43,6 +43,12 @@ PODMAN_BUILD_ARGS=(
     --no-cache
 )
 
+exit_err()
+{
+  echo "${@}"
+  exit -1
+}
+
 mkdir -p "${REPOS}"
 mkdir -p "${DISTFILES}"
 mkdir -p "${BINPKG}"
