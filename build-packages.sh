@@ -14,7 +14,7 @@ BINPKG="${BINPKG:-/var/cache/packages-podman-1}"
 LOGDIR="${LOGDIR:-$(pwd)/log}"
 PACKAGE_USE="${PACKAGE_USE:-$(pwd)/package.use}"
 
-podman_build_args=(
+PODMAN_BUILD_ARGS=(
     # Do not leak the host's /etc/host into the container.
     --no-hosts
     # Remove the container after usage.
@@ -44,7 +44,7 @@ mkdir -p "${DISTFILES}"
 mkdir -p "${BINPKG}"
 mkdir -p "${LOGDIR}"
 
-podman run "${podman_build_args[@]}" "${REGISTRY}:${VERSION}" \
+podman run "${PODMAN_BUILD_ARGS[@]}" "${REGISTRY}:${VERSION}" \
     bash -c "emerge --usepkg --newuse --keep-going --oneshot --deep --update @world \
     && emerge @golang-rebuild @rust-rebuild \
     && eclean-pkg --deep"

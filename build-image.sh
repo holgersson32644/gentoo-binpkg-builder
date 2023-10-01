@@ -16,7 +16,7 @@ BINPKG="${BINPKG:-/var/cache/packages-podman-1}"
 LOGDIR="${LOGDIR:-$(pwd)/log}"
 DOCKER_FILE="${DOCKER_FILE:-$(pwd)/Dockerfile}"
 
-podman_build_args=(
+PODMAN_BUILD_ARGS=(
     # Do not leak the host's /etc/host into the container.
     --no-hosts
     # Limit the memory to be used.
@@ -49,7 +49,7 @@ mkdir -p "${BINPKG}"
 mkdir -p "${LOGDIR}"
 
 podman pull gentoo/stage3:amd64-nomultilib-systemd
-podman build "${podman_build_args[@]}"
+podman build "${PODMAN_BUILD_ARGS[@]}"
 
 # Update the tag 'latest'.
 podman tag rm "${REGISTRY}:latest"
