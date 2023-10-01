@@ -41,7 +41,7 @@ PODMAN_BUILD_ARGS=(
 exit_err()
 {
   echo "${@}"
-  exit -1
+  exit 1
 }
 
 _mkdir()
