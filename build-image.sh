@@ -63,17 +63,23 @@ _mkdir()
   mkdir -p "${@}" || exit_err "Could not create dir ${@}."
 }
 
+# === Prepare all directories.
 _mkdir "${REPOS}"
 _mkdir "${DISTFILES}"
 _mkdir "${BINPKG}"
 _mkdir "${LOGDIR}"
 
+# === Fetch the base image.
 podman pull gentoo/stage3:amd64-nomultilib-systemd || exit_err "Could not fetch the image."
+
+# === Build the new image.
 podman build "${PODMAN_BUILD_ARGS[@]}" || exit_err "Build failed."
 
-# Update the tag 'latest'.
+# === Remove the old tag 'latest'.
 podman tag rm "${REGISTRY}:latest" # Do not exit_err here. At least on first run
                                    # there is no latest tag to delete.
+
+# === Tage the new image as 'latest'.
 podman tag "${REGISTRY}:${VERSION}" "${REGISTRY}:latest" || exit_err "Could not tag new image as 'latest'."
 
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
