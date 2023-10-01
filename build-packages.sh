@@ -58,8 +58,9 @@ _mkdir "${LOGDIR}"
 podman run "${PODMAN_BUILD_ARGS[@]}" "${REGISTRY}:${VERSION}" \
     bash -c "emerge --usepkg --newuse --keep-going --oneshot --deep --update @world \
     && emerge @golang-rebuild @rust-rebuild \
-    && eclean-pkg --deep"
+    && eclean-pkg --deep" \
+    || exit_err "Could not build packages."
 
-podman unshare chown -R "0:0" "${LOGDIR}"
+podman unshare chown -R "0:0" "${LOGDIR}" || exit_err "Could not fix access right post build."
 
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
