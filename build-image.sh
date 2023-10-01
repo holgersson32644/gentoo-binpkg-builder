@@ -49,10 +49,15 @@ exit_err()
   exit -1
 }
 
-mkdir -p "${REPOS}"
-mkdir -p "${DISTFILES}"
-mkdir -p "${BINPKG}"
-mkdir -p "${LOGDIR}"
+_mkdir()
+{
+  mkdir -p "${@}" || exit_err "Could not create dir ${@}."
+}
+
+_mkdir "${REPOS}"
+_mkdir "${DISTFILES}"
+_mkdir "${BINPKG}"
+_mkdir "${LOGDIR}"
 
 podman pull gentoo/stage3:amd64-nomultilib-systemd
 podman build "${PODMAN_BUILD_ARGS[@]}"

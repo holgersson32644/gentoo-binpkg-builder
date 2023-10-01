@@ -45,10 +45,15 @@ exit_err()
   exit -1
 }
 
-mkdir -p "${REPOS}"
-mkdir -p "${DISTFILES}"
-mkdir -p "${BINPKG}"
-mkdir -p "${LOGDIR}"
+_mkdir()
+{
+  mkdir -p "${@}" || exit_err "Could not create dir ${@}."
+}
+
+_mkdir "${REPOS}"
+_mkdir "${DISTFILES}"
+_mkdir "${BINPKG}"
+_mkdir "${LOGDIR}"
 
 podman run "${PODMAN_BUILD_ARGS[@]}" "${REGISTRY}:${VERSION}" \
     bash -c "emerge --usepkg --newuse --keep-going --oneshot --deep --update @world \
