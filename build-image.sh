@@ -16,6 +16,10 @@ BINPKG="${BINPKG:-/var/cache/packages-podman-1}"
 LOGDIR="${LOGDIR:-$(pwd)/log}"
 DOCKER_FILE="${DOCKER_FILE:-$(pwd)/Dockerfile}"
 
+ARCH="${ARCH:-amd64}"
+MICROARCH="${MICROARCH:-amd64}"
+OCI_ARCH="${OCI_ARCH:-linux/amd64}"
+
 PODMAN_BUILD_ARGS=(
     # Do not leak the host's /etc/host into the container.
     --no-hosts
@@ -34,6 +38,10 @@ PODMAN_BUILD_ARGS=(
     -v "${LOGDIR}:/var/log:rw,U"
     # Use the given OCI file/Dockerfile.
     -f "${DOCKER_FILE}"
+    # Add details about the architecture.
+	--build-arg ARCH="${ARCH}"
+	--build-arg MICROARCH="${MICROARCH}"
+	--platform "${OCI_ARCH}"
     # Tag the generated image.
     -t "${IMAGE_TAG}"
     # Label the image.
