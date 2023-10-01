@@ -21,7 +21,8 @@ PODMAN_BUILD_ARGS=(
     --no-hosts
     # Limit the memory to be used.
     --memory=20G
-    --memory-swap=1G
+    # memory-swap is the sum of RAM and swap.
+    --memory-swap=21G
     --shm-size=2G
     # Share the gentoo repo, overlays etc.
     -v "${REPOS}:/var/db/repos:ro"

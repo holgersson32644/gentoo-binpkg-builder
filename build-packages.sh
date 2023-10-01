@@ -22,7 +22,8 @@ PODMAN_BUILD_ARGS=(
     -ti
     # Limit the memory to be used.
     --memory=20G
-    --memory-swap=1G
+    # memory-swap is the sum of RAM and swap.
+    --memory-swap=21G
     --shm-size=2G
     # Share the portage configuration.
     -v "${PACKAGE_USE}:/etc/portage/package.use:ro"
