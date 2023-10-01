@@ -4,10 +4,11 @@
 # ===========================================================================
 #   Update the source image.
 # ===========================================================================
-FROM gentoo/stage3:amd64-nomultilib-systemd as bootstrap
-# Migrate to a merged-usr form.
-RUN emerge --quiet-build=y --oneshot merge-usr
-RUN merge-usr
+
+FROM scratch as bootstrap
+# Unpack the stage3 archive (which is downloaded and verifed externally).
+ADD latest-stage3.tar.xz /
+# Set the profile.
 RUN eselect profile set "default/linux/amd64/17.1/no-multilib/systemd/merged-usr"
 # Replace /etc/portage/make.conf.
 RUN rm --one-file-system /etc/portage/make.conf

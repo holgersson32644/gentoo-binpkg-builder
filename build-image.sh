@@ -47,7 +47,7 @@ PODMAN_BUILD_ARGS=(
     -t "latest"
     # Label the image.
     --label="gentoo-nfr-${IMAGE_TAG}"
-    # Sign the image.
+    # sign the image.
     #--sign-by="${GPG_SIGNING_KEY}"
     # Rebuild everything w/o cache.
     --no-cache
@@ -70,8 +70,21 @@ _mkdir "${DISTFILES}"
 _mkdir "${BINPKG}"
 _mkdir "${LOGDIR}"
 
-# === Fetch the base image.
-podman pull gentoo/stage3:amd64-nomultilib-systemd || exit_err "Could not fetch the image."
+# === Fetch the stage3 file (and verify it).
+SERVER="https://ftp-osl.osuosl.org/pub/gentoo/releases/${ARCH}/autobuilds"
+MY_STAGE3="latest-stage3-amd64-nomultilib-systemd-mergedusr.txt"
+LATEST_ARCHIVE="$(curl -sLC- ${SERVER}/${MY_STAGE3} | tail -n1 | cut -f1 -d' ')"
+ARCHIVE_FILE_NAME="$(echo ${LATEST_ARCHIVE} | cut -f2 -d'/')"
+
+### Fetch the stage3 archive and its signature.
+curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${LATEST_ARCHIVE}" \
+  || exit_err "Could not download the stage3 archive."
+curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${LATEST_ARCHIVE}.asc" \
+  || exit_err "Could not download the stage3 archive signature."
+
+# Verify the signature.
+gpg --verify "${DISTFILES}/${ARCHIVE_FILE_NAME}"{.asc,} \
+  || exit_err "Could not verify the stage3 archive."
 
 # === Remove the old tag 'latest'.
 podman tag rm "${REGISTRY}:latest" # Do not exit_err here. At least on first run
