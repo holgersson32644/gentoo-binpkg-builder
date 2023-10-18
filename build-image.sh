@@ -44,7 +44,7 @@ PODMAN_BUILD_ARGS=(
 	--platform "${OCI_ARCH}"
     # Tag the generated image.
     -t "${IMAGE_TAG}"
-    -t "latest"
+    -t "${REGISTRY}:latest"
     # Label the image.
     --label="gentoo-nfr-${IMAGE_TAG}"
     # sign the image.
