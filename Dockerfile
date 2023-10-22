@@ -7,7 +7,8 @@
 
 FROM scratch as bootstrap
 # Unpack the stage3 archive (which is downloaded and verifed externally).
-ADD latest-stage3.tar.xz /
+ARG ROOTFS_FILENAME=""
+ADD ${ROOTFS_FILENAME} /
 # Set the profile.
 RUN eselect profile set "default/linux/amd64/17.1/no-multilib/systemd/merged-usr"
 # Replace /etc/portage/make.conf.

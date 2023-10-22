@@ -91,6 +91,7 @@ podman tag rm "${REGISTRY}:latest" # Do not exit_err here. At least on first run
                                    # there is no latest tag to delete.
 
 # === Build the new image.
-podman build "${PODMAN_BUILD_ARGS[@]}" || exit_err "Build failed."
+podman build --build-arg=ROOTFS_FILENAME="${DISTFILES}/${ARCHIVE_FILE_NAME}" \
+  "${PODMAN_BUILD_ARGS[@]}" || exit_err "Build failed."
 
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
