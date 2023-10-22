@@ -71,12 +71,20 @@ _mkdir "${BINPKG}"
 _mkdir "${LOGDIR}"
 
 # === Fetch the stage3 file (and verify it).
+# Note: This uses some nasty string manipulation assuming a certain structure.
+#       If upstream changes the format, things will break here, again.
 SERVER="https://ftp-osl.osuosl.org/pub/gentoo/releases/${ARCH}/autobuilds"
 MY_STAGE3="latest-stage3-amd64-nomultilib-systemd-mergedusr.txt"
-LATEST_ARCHIVE="$(curl -sLC- ${SERVER}/${MY_STAGE3} | tail -n1 | cut -f1 -d' ')"
+
+# Fetch the stage3 archive and its signature.
+curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${MY_STAGE3}" \
+  || exit_err "Could not download the pointer file for the stage3 archive."
+gpg --verify "${DISTFILES}/${MY_STAGE3}" \
+  || exit_err "Could not verify the download pointer file."
+
+LATEST_ARCHIVE="$(grep $(echo ${MY_STAGE3} | sed 's/latest-//;s/.txt//') ${DISTFILES}/${MY_STAGE3} | cut -f1 -d' ')"
 ARCHIVE_FILE_NAME="$(echo ${LATEST_ARCHIVE} | cut -f2 -d'/')"
 
-### Fetch the stage3 archive and its signature.
 curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${LATEST_ARCHIVE}" \
   || exit_err "Could not download the stage3 archive."
 curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${LATEST_ARCHIVE}.asc" \
