@@ -1,0 +1,4 @@
+= gentoo images
+:toc:
+
+// vim:syntax=asciidoc:fileencoding=utf-8:ts=4:expandtab:linebreak:wrap
