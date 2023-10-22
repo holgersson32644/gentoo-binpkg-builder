@@ -12,6 +12,7 @@ IMAGE_TAG="${REGISTRY}:${VERSION}"
 
 REPOS="${REPOS:-/var/db/repos}"
 DISTFILES="${DISTFILES:-/var/cache/distfiles-podman-1}"
+DISTFILES_STAGE3="${DISTFILES_STAGE3:-distfiles}"
 BINPKG="${BINPKG:-/var/cache/packages-podman-1}"
 LOGDIR="${LOGDIR:-$(pwd)/log}"
 DOCKER_FILE="${DOCKER_FILE:-$(pwd)/Dockerfile}"
@@ -67,6 +68,7 @@ _mkdir()
 # === Prepare all directories.
 _mkdir "${REPOS}"
 _mkdir "${DISTFILES}"
+_mkdir "${DISTFILES_STAGE3}"
 _mkdir "${BINPKG}"
 _mkdir "${LOGDIR}"
 
@@ -77,21 +79,21 @@ SERVER="https://ftp-osl.osuosl.org/pub/gentoo/releases/${ARCH}/autobuilds"
 MY_STAGE3="latest-stage3-amd64-nomultilib-systemd-mergedusr.txt"
 
 # Fetch the stage3 archive and its signature.
-curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${MY_STAGE3}" \
+curl -sLC- -O --output-dir "${DISTFILES_STAGE3}" "${SERVER}/${MY_STAGE3}" \
   || exit_err "Could not download the pointer file for the stage3 archive."
-gpg --verify "${DISTFILES}/${MY_STAGE3}" \
+gpg --verify "${DISTFILES_STAGE3}/${MY_STAGE3}" \
   || exit_err "Could not verify the download pointer file."
 
-LATEST_ARCHIVE="$(grep $(echo ${MY_STAGE3} | sed 's/latest-//;s/.txt//') ${DISTFILES}/${MY_STAGE3} | cut -f1 -d' ')"
+LATEST_ARCHIVE="$(grep $(echo ${MY_STAGE3} | sed 's/latest-//;s/.txt//') ${DISTFILES_STAGE3}/${MY_STAGE3} | cut -f1 -d' ')"
 ARCHIVE_FILE_NAME="$(echo ${LATEST_ARCHIVE} | cut -f2 -d'/')"
 
-curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${LATEST_ARCHIVE}" \
+curl -sLC- -O --output-dir "${DISTFILES_STAGE3}" "${SERVER}/${LATEST_ARCHIVE}" \
   || exit_err "Could not download the stage3 archive."
-curl -sLC- -O --output-dir "${DISTFILES}" "${SERVER}/${LATEST_ARCHIVE}.asc" \
+curl -sLC- -O --output-dir "${DISTFILES_STAGE3}" "${SERVER}/${LATEST_ARCHIVE}.asc" \
   || exit_err "Could not download the stage3 archive signature."
 
 # Verify the signature.
-gpg --verify "${DISTFILES}/${ARCHIVE_FILE_NAME}"{.asc,} \
+gpg --verify "${DISTFILES_STAGE3}/${ARCHIVE_FILE_NAME}"{.asc,} \
   || exit_err "Could not verify the stage3 archive."
 
 # === Remove the old tag 'latest'.
@@ -99,7 +101,7 @@ podman tag rm "${REGISTRY}:latest" # Do not exit_err here. At least on first run
                                    # there is no latest tag to delete.
 
 # === Build the new image.
-podman build --build-arg=ROOTFS_FILENAME="${DISTFILES}/${ARCHIVE_FILE_NAME}" \
+podman build --build-arg=ROOTFS_FILENAME="${DISTFILES_STAGE3}/${ARCHIVE_FILE_NAME}" \
   "${PODMAN_BUILD_ARGS[@]}" || exit_err "Build failed."
 
 # vim:fileencoding=utf-8:ts=4:syntax=bash:expandtab
