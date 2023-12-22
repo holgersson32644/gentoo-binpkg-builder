@@ -9,5 +9,3 @@ FFLAGS="${COMMON_FLAGS}"
 # '-Wl,-z,relro'              : make segments RO after relocation
 # '-Wl,-z,now'                : disable lazy-binding
 LDFLAGS="-Wl,-O2 -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -fdiagnostics-color=always -Wl,--defsym=__gentoo_check_ldflags__=0"
-
-CPU_FLAGS_X86="aes"
